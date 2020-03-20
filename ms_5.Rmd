@@ -71,7 +71,7 @@ meat_clean_decade <- meat_clean[c(5:52, 485:532, 965:1012, 1445:1492),]
 # scale.
 
 meat_clean_decade %>% 
-  ggplot() +
+  ggplot() + 
   geom_point(aes(x = date, y = red_meat_produced, color = kind_of_meat)) +
   labs(title = "Red Meat Produced From 1989 - 2019",
        x = "Date",
