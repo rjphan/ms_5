@@ -80,6 +80,6 @@ meat_clean_decade %>%
        theme_classic() +
       theme(
         legend.position = "right",
-        axis.text.x = element_text(angle = 75, hjust = 1))
+        axis.text.x = element_text(angle = 80, hjust = 1))
 
 ```
