@@ -1,0 +1,36 @@
+---
+title: "ms_5"
+author: "Rachel Phan"
+date: "3/20/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(janitor)
+library(readr)
+library(readxl)
+library(stringr)
+```
+
+```{r loading data, include=FALSE}
+
+meat <- read_excel("RedMeatPoultry_ProdFull.xlsx", skip = 2)
+View(meat)
+
+```
+
+```{r}
+
+meat_clean <- meat %>% 
+  select(1:5) %>% 
+  rename(beef = "Beef 3/...2") %>% 
+  rename(veal = "Veal 3/...3") %>% 
+  rename(pork = "Pork 3/...4") %>% 
+  rename(lamb_and_mutton = "Lamb and mutton 3/...5") %>% 
+  rename(date = "...1")
+View(meat_clean)
+
+```
+
