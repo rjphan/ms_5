@@ -15,14 +15,25 @@ library(lubridate)
 library(stringr)
 ```
 
-Originally, I wanted to do the final project on sexual assault at Harvard. However, after speaking with the Title IX officer, I realized that this would be very difficult. I asked the officer if she had the raw data for the AAU survey (which contains most of the data I would be interested in), but she said even she had difficulty accessing the Harvard data from AAU: she had to request it from the data team at Harvard. Thus, it would be basically impossible for me to access the data. I also looked for national data online, but this is also heavily restricted. I decided that, given the difficulty, I would start over and pick a new topic, unfortunately. With my interest in environmental science, I decided I would switch to studying the meat industry (and possibly the new Impossible Meat industry). The data was easier to obtain. I plan to examine (if I can find the right data) how the Impossible Meat industry has disrupted meat production.
+Originally, I wanted to do the final project on sexual assault at Harvard.
+However, after speaking with the Title IX officer, I realized that this would be
+very difficult. I asked the officer if she had the raw data for the AAU survey
+(which contains most of the data I would be interested in), but she said even
+she had difficulty accessing the Harvard data from AAU: she had to request it
+from the data team at Harvard. Thus, it would be basically impossible for me to
+access the data. I also looked for national data online, but this is also
+heavily restricted. I decided that, given the difficulty, I would start over and
+pick a new topic, unfortunately. With my interest in environmental science, I
+decided I would switch to studying the meat industry (and possibly the new
+Impossible Meat industry). The data was easier to obtain. I plan to examine (if
+I can find the right data) how the Impossible Meat industry has disrupted meat
+production.
 
 ```{r loading data, include=FALSE}
 
 # Data from https://www.ers.usda.gov/data-products/livestock-meat-domestic-data/
 
 meat <- read_excel("RedMeatPoultry_ProdFull.xlsx", skip = 2)
-View(meat)
 
 ```
 
