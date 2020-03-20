@@ -11,26 +11,75 @@ library(tidyverse)
 library(janitor)
 library(readr)
 library(readxl)
+library(lubridate)
 library(stringr)
 ```
 
+Originally, I wanted to do the final project on sexual assault at Harvard. However, after speaking with the Title IX officer, I realized that this would be very difficult. I asked the officer if she had the raw data for the AAU survey (which contains most of the data I would be interested in), but she said even she had difficulty accessing the Harvard data from AAU: she had to request it from the data team at Harvard. Thus, it would be basically impossible for me to access the data. I also looked for national data online, but this is also heavily restricted. I decided that, given the difficulty, I would start over and pick a new topic, unfortunately. With my interest in environmental science, I decided I would switch to studying the meat industry (and possibly the new Impossible Meat industry). The data was easier to obtain. I plan to examine (if I can find the right data) how the Impossible Meat industry has disrupted meat production.
+
 ```{r loading data, include=FALSE}
+
+# Data from https://www.ers.usda.gov/data-products/livestock-meat-domestic-data/
 
 meat <- read_excel("RedMeatPoultry_ProdFull.xlsx", skip = 2)
 View(meat)
 
 ```
 
-```{r}
+```{r clean data, include=FALSE}
+
+# I am interested in how much meat is produced commercially, so I selected for
+# the first 6 columns. The other columns deal with how much meat is federally
+# inspected. Then I renamed the variables. The data had more than one
+# observation per row, so I pivoted the data to make it neater. I also wanted to
+# ignore the NAs. I reorganized the order of the variables. The top and tail end
+# of the data were irrelevant, so I removed them from the dataset. I then wanted
+# to look at how much meat prodcution has grown per decade.
 
 meat_clean <- meat %>% 
-  select(1:5) %>% 
+  select(1:6) %>% 
   rename(beef = "Beef 3/...2") %>% 
   rename(veal = "Veal 3/...3") %>% 
   rename(pork = "Pork 3/...4") %>% 
-  rename(lamb_and_mutton = "Lamb and mutton 3/...5") %>% 
-  rename(date = "...1")
-View(meat_clean)
+  rename("lamb and mutton" = "Lamb and mutton 3/...5") %>% 
+  rename(date = "...1") %>% 
+  rename(total = "Total red meat 3/ 4/...6") %>% 
+  pivot_longer(cols = 2:5, names_to = "kind_of_meat") %>% 
+  rename(red_meat_produced = value) %>% 
+  filter(!is.na(red_meat_produced) | !is.na(total))
+meat_clean = meat_clean[,c(1,3,4,2)]
+meat_clean = meat_clean[-c(1:8, 1773:2905),]
+
+meat_clean_decade <- meat_clean[c(5:52, 485:532, 965:1012, 1445:1492),] 
 
 ```
 
+```{r create graph, echo=FALSE}
+
+# The issue with this graph is that the dates on the x-axis are out of numerical
+# order. I tried to fix this at first my changing the "date" variable to a class
+# of date using as.Date; however, when I attempted that, it returned only NAs. I
+# then tried to parse the dates using parse_date using the lubridate package,
+# but it returned an error where it says that the date variable is not in the
+# class of character, even though it already is. I was unsuccessful in turning
+# the variable into a class of date. I then changed the variable into a factor
+# so I could use fct_relevel like we did in one of the PSETs to reorder the
+# levels, but that did not work because "date" only yieled one level. I was
+# unsuccessful in changing the order of the x-axis labels, but if it were
+# ordered correctly, I hypothesize that I would see growth in meat production. I
+# tried scaling by log_10 as well, but the graph looked better without the log
+# scale.
+
+meat_clean_decade %>% 
+  ggplot() +
+  geom_point(aes(x = date, y = red_meat_produced, color = kind_of_meat)) +
+  labs(title = "Red Meat Produced From 1989 - 2019",
+       x = "Date",
+       y = "Red Meat Produced (Millions of Pounds)", 
+       color = "Kind of Meat") +
+       theme_classic() +
+      theme(
+        legend.position = "right",
+        axis.text.x = element_text(angle = 75, hjust = 1))
+
+```
